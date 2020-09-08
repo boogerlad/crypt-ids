@@ -1,21 +1,7 @@
 use aes::Aes128;
 use fpe::ff1::{BinaryNumeralString, FF1};
 use wasm_bindgen::prelude::*;
-use js_sys::{ArrayBuffer, Uint8Array};
-
-#[wasm_bindgen]
-extern {
-	pub type Buffer;
-
-	#[wasm_bindgen(method, getter)]
-	fn buffer(this: &Buffer) -> ArrayBuffer;
-
-	#[wasm_bindgen(method, getter, js_name = byteOffset)]
-	fn byte_offset(this: &Buffer) -> u32;
-
-	#[wasm_bindgen(method, getter)]
-	fn length(this: &Buffer) -> u32;
-}
+use js_sys::Uint8Array;
 
 #[wasm_bindgen]
 pub struct Cryptids {
@@ -25,14 +11,10 @@ pub struct Cryptids {
 #[wasm_bindgen]
 impl Cryptids {
 	#[wasm_bindgen(constructor)]
-	pub fn new(buffer: &Buffer) -> Cryptids {
+	pub fn new(bytes: &Uint8Array) -> Cryptids {
 		Cryptids {
 			foo: FF1::<Aes128>::new(
-				&Uint8Array::new_with_byte_offset_and_length(
-					&buffer.buffer(),
-					buffer.byte_offset(),
-					buffer.length(),
-				).to_vec(),
+				&bytes.to_vec(),
 				2
 			).unwrap()
 		}

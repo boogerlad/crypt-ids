@@ -8,7 +8,8 @@ cat /dev/urandom | head -c 16 > 16byteSecretKey
 # or /dev/null for testing purposes
 ```
 ```js
-const cryptids = new (require('crypt-ids').Cryptids)(require('fs').readFileSync('./16byteSecretKey'));
+const b = require('fs').readFileSync('./16byteSecretKey');
+const cryptids = new (require('crypt-ids').Cryptids)(new Uint8Array(b.buffer, b.byteOffset, b.byteLength));
 let original = 5;
 let encrypted = cryptids.i2s(original);
 let decrypted = cryptids.s2i(encrypted);
