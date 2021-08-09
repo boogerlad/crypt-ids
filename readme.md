@@ -39,3 +39,31 @@ I didn't actually do anything other than bundle things together...
 this package was generated with `cargo new --lib crypt-ids`
 
 to build the npm package from the rust source, `wasm-pack build --target nodejs`
+
+## FAQ
+### Isn't format preserving encryption slow?
+With this benchmark code on a 3950x
+```
+const b = require('fs').readFileSync('./16byteSecretKey');
+const cryptids = new (require('crypt-ids').Cryptids)(new Uint8Array(b.buffer, b.byteOffset, b.byteLength));
+const l = 1000000;
+let decrypted = new Array(l);
+let encrypted = new Array(l);
+const start = process.hrtime.bigint();
+for(let i = 0; i < l; ++i) {
+    encrypted[i] = cryptids.i2s(i);
+}
+const e = process.hrtime.bigint();
+for(let i = 0; i < l; ++i) {
+    decrypted[i] = cryptids.s2i(encrypted[i]);
+}
+const d = process.hrtime.bigint();
+console.log((e - start) / 1000000000n, (d - e) / 1000000000n);
+```
+it outputs
+```
+33n 33n
+```
+which translates to 30303 encodes or decodes per second.
+### What is the encoded string length?
+5 or 6.
