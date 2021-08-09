@@ -66,4 +66,4 @@ it outputs
 ```
 which translates to 30303 encodes or decodes per second.
 ### What is the encoded string length?
-5 or 6.
+4 to 6.
