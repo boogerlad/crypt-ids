@@ -11,9 +11,9 @@ cat /dev/urandom | head -c 16 > 16byteSecretKey
 const b = require('fs').readFileSync('./16byteSecretKey');
 const cryptids = new (require('crypt-ids').Cryptids)(new Uint8Array(b.buffer, b.byteOffset, b.byteLength));
 let original = 5;
-let encrypted = cryptids.i2s(original);
-let decrypted = cryptids.s2i(encrypted);
-console.log(original, encrypted, decrypted);
+let encoded_encrypted = cryptids.i2s(original);
+let decrypted_decoded = cryptids.s2i(encrypted);
+console.log(original, encoded_encrypted, decrypted_decoded);
 ```
 ```
 5 meGJU 5
@@ -43,19 +43,17 @@ to build the npm package from the rust source, `wasm-pack build --target nodejs`
 ## FAQ
 ### Isn't format preserving encryption slow?
 With this benchmark code on a 3950x
-```
-const b = require('fs').readFileSync('./16byteSecretKey');
-const cryptids = new (require('crypt-ids').Cryptids)(new Uint8Array(b.buffer, b.byteOffset, b.byteLength));
+```js
 const l = 1000000;
-let decrypted = new Array(l);
-let encrypted = new Array(l);
+let decrypted_decoded = new Array(l);
+let encoded_encrypted = new Array(l);
 const start = process.hrtime.bigint();
 for(let i = 0; i < l; ++i) {
-    encrypted[i] = cryptids.i2s(i);
+    encoded_encrypted[i] = cryptids.i2s(i);
 }
 const e = process.hrtime.bigint();
 for(let i = 0; i < l; ++i) {
-    decrypted[i] = cryptids.s2i(encrypted[i]);
+    decrypted_decoded[i] = cryptids.s2i(encrypted[i]);
 }
 const d = process.hrtime.bigint();
 console.log((e - start) / 1000000000n, (d - e) / 1000000000n);
@@ -66,4 +64,4 @@ it outputs
 ```
 which translates to 30303 encodes or decodes per second.
 ### What is the encoded string length?
-4 to 6.
+4 to 6. In base58, leading zero bytes are encoded as '1'. If 0 is the result after encryption, in binary it's `00000000 00000000 00000000 00000000` since it's an `i32`. After encoding is `1111`. The length after that is dependent on how many times it takes to integer divide the result after encryption by 58 to reach 0. (larger number => lenghthier)
