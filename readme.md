@@ -64,4 +64,28 @@ it outputs
 ```
 which translates to 30303 encodes or decodes per second.
 ### What is the encoded string length?
-4 to 6. In base58, leading zero bytes are encoded as '1'. If 0 is the result after encryption, in binary it's `00000000 00000000 00000000 00000000` since it's an `i32`. After encoding is `1111`. The length after that is dependent on how many times it takes to integer divide the result after encryption by 58 to reach 0. (larger number => lenghthier)
+4 to 6. In base58, leading zero bytes are encoded as '1'. If 0 is the result after encryption, in binary it's `00000000 00000000 00000000 00000000` since it's an `i32`. After encoding is `1111`. The length after the leading zero bytes is dependent on how many times it takes to integer divide the result after encryption by 58 to reach 0. (larger number => lengthier)
+
+For example, 255 => `00000000 00000000 00000000 11111111` => "1115Q". There are three leading zero bytes.
+
+255 % 58 = 23 => 'Q'
+
+255 \ 58 = 4
+
+4 % 58 = 4 => '5'
+
+4 \ 58 = 0. Done
+
+Another example: 65535 => `00000000 00000000 11111111 11111111` => "11LUv". There are two leading zero bytes.
+
+65535 % 58 = 53 => 'v'
+
+65535 \ 58 = 1129
+
+1129 % 58 = 27 => 'U'
+
+1129 \ 58 = 19
+
+19 % 58 = 19 => 'L'
+
+19 \ 58 = 0. Done
