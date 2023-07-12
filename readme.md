@@ -12,7 +12,7 @@ const b = require('fs').readFileSync('./16byteSecretKey');
 const cryptids = new (require('crypt-ids').Cryptids)(new Uint8Array(b.buffer, b.byteOffset, b.byteLength));
 let original = 5;
 let encoded_encrypted = cryptids.i2s(original);
-let decrypted_decoded = cryptids.s2i(encrypted);
+let decrypted_decoded = cryptids.s2i(encoded_encrypted);
 console.log(original, encoded_encrypted, decrypted_decoded);
 ```
 ```
