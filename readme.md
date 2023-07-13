@@ -8,12 +8,11 @@ cat /dev/urandom | head -c 16 > 16byteSecretKey
 # or /dev/null for testing purposes
 ```
 ```js
-const b = require('fs').readFileSync('./16byteSecretKey');
-const cryptids = new (require('crypt-ids').Cryptids)(new Uint8Array(b.buffer, b.byteOffset, b.byteLength));
+const cryptids = new (require('crypt-ids').Cryptids)(require('fs').readFileSync('./16byteSecretKey'));
 //or es6 modules
 import { Cryptids } from 'crypt-ids';
 import { readFileSync } from 'fs'
-const cryptids = new Cryptids(new Uint8Array(readFileSync('./16byteSecretKey')));
+const cryptids = new Cryptids(readFileSync('./16byteSecretKey'));
 
 let original = 5;
 let encoded_encrypted = cryptids.i2s(original);
