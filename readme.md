@@ -93,3 +93,9 @@ Another example: 65535 => `00000000 00000000 11111111 11111111` => "11LUv". Ther
 19 % 58 = 19 => 'L'
 
 19 \ 58 = 0. Done
+
+### Maintainer
+
+**Kevin Hua** ([@boogerlad](https://github.com/boogerlad)) is the author and maintainer of crypt-ids.
+
+Security issues and vulnerability reports are handled by the maintainer. Please use GitHub's private vulnerability reporting mechanism where available.
